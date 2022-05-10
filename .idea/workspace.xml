@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f4d98a4-bd8c-4b37-b5c1-a05d751c775a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/notebook/.ipynb_checkpoints/Task 1-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebook/.ipynb_checkpoints/Task 1-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notebook/Task 1.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebook/Task 1.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/Eda.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/Eda.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +41,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1652113719164</updated>
-      <workItem from="1652113725415" duration="13501000" />
+      <workItem from="1652113725415" duration="14095000" />
     </task>
     <servers />
   </component>
