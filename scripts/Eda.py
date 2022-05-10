@@ -35,7 +35,7 @@ class Eda:
         top_col = df[col].value_counts().nlargest(number).to_frame()
         return top_col
 
-    def aggregation(self, df: pd.DataFrame,number):
+    def aggregation(self, df: pd.DataFrame, number):
         group = []
         new_df = df.loc[df["Handset Manufacturer"] == "Apple", :]
         new_df1 = df.loc[df["Handset Manufacturer"] == "Samsung", :]
@@ -94,7 +94,7 @@ class Eda:
     def convertbyte_scale(self, df: pd.DataFrame, substrings, replaces, div_value):
         my_bytes = [j for j in df.columns if substrings in j]
         for i in my_bytes:
-            df[i.replace(substrings, replaces)] = df[i] / div_value
+            df[i.replace(substrings, replaces)] = round((df[i] / div_value), 3)
             df.drop(i, axis=1, inplace=True)
         return df
 
@@ -110,9 +110,13 @@ class Eda:
         df[col_names] = scaler.fit_transform(df[col_names])
         return df
 
-    def non_grahical_EDA(self, df: pd.DataFrame, relevant_num, relevant_cat):
+    def describes(self, df: pd.DataFrame, relevant_num):
         for cols in relevant_num:
             print(df[cols].describe().to_frame())
+            print(f"Column name is {cols}")
+
+    def non_grahical_EDA(self, df: pd.DataFrame, relevant_num):
+        for cols in relevant_num:
             print(f"Column name is {cols}")
             print(f'skewness for this column is {df[cols].skew()}')
             print(f'kurtosis for this column is {df[cols].kurtosis()}')
@@ -121,15 +125,17 @@ class Eda:
             print(f'The IQR is {IQR}')
             print(f'The number of Unique value of column {cols} is : {df[cols].nunique()}')
             print('____________________________________________________________________')
-        for cols in relevant_cat:
-            print(df[cols].describe(include=['O']))
 
     def univariate_plot(self, df: pd.DataFrame, relevant_num):
         for cols in relevant_num:
             sns.histplot(data=df, x=cols)
+            plt.show()
+        for cols in relevant_num:
             sns.boxplot(data=df, x=cols)
+            plt.show()
+        for cols in relevant_num:
             sns.kdeplot(data=df, x=cols)
-            return plt.show()
+            plt.show()
 
     def bivariate_plot(self, df: pd.DataFrame, relevant_app, x):
         for i in relevant_app:
@@ -137,21 +143,21 @@ class Eda:
             plt.title(f'graph of {i} against {x}')
             plt.xlabel(x)
             plt.ylabel(i)
-            return plt.show()
+            plt.show()
 
-    '''
-    def variable_transformation(data,x,y,newl):
-        data[y] = pd.qcut(data[x], 10,labels=False,duplicates= 'drop')
+    def variable_transformation(self, df: pd.DataFrame,x,y):
+        newl = []
+        df[y] = pd.qcut(df[x], 10,labels=False,duplicates= 'drop')
         New_df = pd.DataFrame()
-        New_df['total_data_UL+DL'] = data['Total_Data_volume (MB)']
-        New_df['MSISDN/Number'] = data['MSISDN/Number']
-        New_df['top_5_decile_Dur. (MS)'] = data['top_5_decile_Dur. (MS)']
+        New_df['MSISDN/Number'] = df['MSISDN/Number']
+        New_df['total_data_volume'] = df['Total_data (MB)']
+        New_df['top_5_decile_Dur. (s)'] = df[y]
     
-        new_df = New_df.loc[New_df["top_5_decile_Dur. (MS)"]==3,:]
-        new_df1 = New_df.loc[New_df["top_5_decile_Dur. (MS)"]==2,:]
-        new_df2 = New_df.loc[New_df["top_5_decile_Dur. (MS)"]==0,:]
-        new_df3 = New_df.loc[New_df["top_5_decile_Dur. (MS)"]==8,:]
-        new_df4 = New_df.loc[New_df["top_5_decile_Dur. (MS)"]==7,:]
+        new_df = New_df.loc[New_df["top_5_decile_Dur. (s)"]==3,:]
+        new_df1 = New_df.loc[New_df["top_5_decile_Dur. (s)"]==2,:]
+        new_df2 = New_df.loc[New_df["top_5_decile_Dur. (s)"]==0,:]
+        new_df3 = New_df.loc[New_df["top_5_decile_Dur. (s)"]==6,:]
+        new_df4 = New_df.loc[New_df["top_5_decile_Dur. (s)"]==7,:]
     
         new_df = pd.DataFrame(new_df.reset_index())
         new_df1 = pd.DataFrame(new_df1.reset_index())
@@ -172,28 +178,21 @@ class Eda:
         top_5s.drop("index",axis=1,inplace=True)
         return top_5s
     
-    def corr(data):
+    def corr(self, df: pd.DataFrame, cols):
         df_data = pd.DataFrame()
-    
-        df_data['Social Media data'] = data['Social Media DL (MB)'] + data['Social Media UL (MB)']
-        df_data['Google data'] = data['Google DL (MB)'] + data['Google UL (MB)']
-        df_data['Email data'] = data['Email DL (MB)'] + data['Email UL (MB)']
-        df_data['Youtube data'] = data['Youtube DL (MB)'] + data['Youtube UL (MB)']
-        df_data['Netflix data'] = data['Netflix DL (MB)'] + data['Netflix UL (MB)']
-        df_data['Gaming data'] = data['Gaming DL (MB)'] + data['Gaming UL (MB)']
-        df_data['Other data'] = data['Other DL (MB)'] + data['Other UL (MB)']
-    
+        for i in cols:
+            df_data[i] = df[i]
         return df_data.corr()
-        '''
 
-    def PCA(self, df: pd.DataFrame,principal1_name, principal2_name):
+    def PCA(self, df: pd.DataFrame, principal1_name, principal2_name):
         pca = PCA(n_components=2)
         principalComponents = pca.fit_transform(df)
         principalDf = pd.DataFrame(data=principalComponents, columns=[principal1_name, principal2_name])
         return principalDf
 
     def fix_outlier(self, df: pd.DataFrame, column):
-        df[column] = np.where(df[column] > df[column].quantile(0.95),
-                              df[column].mean(),
-                              df[column])
-        return df[column]
+        for i in column:
+            df[i] = np.where(df[i] > df[i].quantile(0.95),
+                             df[i].mean(),
+                             df[i])
+        return df
