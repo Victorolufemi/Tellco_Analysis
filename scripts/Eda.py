@@ -139,8 +139,8 @@ class Eda:
 
     def bivariate_plot(self, df: pd.DataFrame, relevant_app, x):
         for i in relevant_app:
-            sns.scatterplot(data=df, x=x, y=i, alpha=0.5)
-            plt.title(f'graph of {i} against {x}')
+            sns.scatterplot(data=df, x=i, y=x, alpha=0.5)
+            plt.title(f'graph of {x} against {i}')
             plt.xlabel(x)
             plt.ylabel(i)
             plt.show()
