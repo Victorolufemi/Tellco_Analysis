@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pkg_resources import yield_lines
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.decomposition import PCA
@@ -106,8 +107,9 @@ class Eda:
 
     def standard_scale(self, df: pd.DataFrame, col_names):
         from sklearn.preprocessing import StandardScaler
-        scaler = StandardScaler()
-        df[col_names] = scaler.fit_transform(df[col_names])
+        for i in col_names:
+            scaler = StandardScaler()
+            df[col_names] = scaler.fit_transform(df[col_names])
         return df
 
     def describes(self, df: pd.DataFrame, relevant_num):
@@ -141,8 +143,8 @@ class Eda:
         for i in relevant_app:
             sns.scatterplot(data=df, x=i, y=x, alpha=0.5)
             plt.title(f'graph of {x} against {i}')
-            plt.xlabel(x)
-            plt.ylabel(i)
+            plt.xlabel(i)
+            plt.ylabel(x)
             plt.show()
 
     def variable_transformation(self, df: pd.DataFrame,x,y):
@@ -196,3 +198,8 @@ class Eda:
                              df[i].mean(),
                              df[i])
         return df
+    
+    def groupby(self, df: pd.DataFrame, column, agg, largest):
+        for i in column:
+            engage = df.groupby([i],as_index=False).agg({agg: sum})
+            print(engage.nlargest(largest, [i]))
