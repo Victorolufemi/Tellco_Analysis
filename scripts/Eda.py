@@ -203,3 +203,11 @@ class Eda:
         for i in column:
             engage = df.groupby([i],as_index=False).agg({agg: sum})
             print(engage.nlargest(largest, [i]))
+
+    def head_tail(self, df:pd.DataFrame, column, no):
+        for i in column:
+            print(f'For {i}')
+            print(f'HEAD')
+            print(df[i].head(no))
+            print(f'TAIL')
+            print(df[i].tail(no))
